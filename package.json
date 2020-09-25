@@ -1,0 +1,14 @@
+{
+  "name": "imaginer",
+  "version": "1.0.0",
+  "description": "site vitrine pour la marque i-maginer",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Squallou",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
