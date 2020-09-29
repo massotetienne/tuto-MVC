@@ -1,9 +1,27 @@
 // ==== constantes ====
 
-const express  = require ('express');
-const exphbs   = require('express-handlebars');
-const mongoose = require('mongoose');
-const bodyParser = require('body-parser')
+const express    = require ('express');
+const exphbs     = require ('express-handlebars');
+const mongoose   = require ('mongoose');
+const bodyParser = require ('body-parser');
+const fileupload = require ('express-fileupload');
+
+
+
+// ==== Controller ====
+
+// article
+const articleAddController    = require ('./controllers/articleAdd')
+const homePage                = require ('./controllers/homePage')
+const articleSingleController = require ('./controllers/articleSingle')
+const articlePostController   = require ('./controllers/articlePost')
+
+// user
+const userCreate    = require ('./controllers/userCreate')
+const userRegister  = require ('./controllers/userRegister')
+const userLogin     = require ('./controllers/userLogin')
+const userLoginAuth = require ('./controllers/userLoginAuth')
+
 const app = express();
 
 
@@ -15,8 +33,8 @@ mongoose.connect(process.env.MONGO_URI, {
     useUnifiedTopology: true
 })
 
-var Handlebars = require("handlebars");
-var MomentHandler = require ("handlebars.moment");
+var Handlebars    = require  ("handlebars");
+var MomentHandler = require  ("handlebars.moment");
 MomentHandler.registerHelpers(Handlebars);
 // 
 
@@ -24,8 +42,9 @@ MomentHandler.registerHelpers(Handlebars);
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended : true}))
 
+app.use(fileupload())
 // ==== const Post ====
-const Post = require ("./database/models/Article")
+
 
 // === Express===
 app.use(express.static('public'));
@@ -34,51 +53,33 @@ require('./console')
 
 //==== route ====
 app.engine('handlebars',exphbs({defaultLayout: 'main'}));
-app.set('view engine','handlebars');
+app.set   ('view engine','handlebars');
+
+
+
+// ====middleware==== //
+const articleValidPost = require('./middleware/articleValidPost');
+
+app.use("/articles/post",articleValidPost)
 
 // ==== Get ==== 
-app.get ("/", async (req,res) => {
-    
-    const post = await Post.find({})
-    console.log(post);
-
-    res.render("index",{post} )  
-})
-
-app.get ("/contact",(req,res) => {
-    res.render("contact")
-})
+app.get ("/",  homePage)
 
 //==== Articles ====
+app.get ("/articles/add",articleAddController)
+app.get ("/articles/:id",articleSingleController)
+app.post("/articles/post",articlePostController)
+
+// ==== user ====
+app.get ('/user/create',userCreate)
+app.post('/user/register',userRegister)
+app.get('/user/login', userLogin)
+app.post('/user/loginAuth', userLoginAuth)
 
 
-app.get("/articles/:id", async (req,res) => {
-
-    console.log(req.params);
-
-    const article = await Post.findById(req.params.id)
-
-    res.render("articles",  {article})
-
-})
-
-
-
-
-app.get("/article/add",(req,res)=>{
-    res.render("article/add")
-})
-
-//==== post =====
-app.post("/articles/post",(req,res)=>{
-
-    Post.create(req.body,(error,post)=>{
-        res.redirect('/')
-
-    })
-    console.log(req.body);
-
-    res.redirect('/')
+// ==== contact ====
+app.get ("/contact",(req,res) => {
+    res.render("contact")
 })
 
 // ==== Port ====
