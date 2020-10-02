@@ -2,8 +2,9 @@ const path = require('path')
 const Post = require ("../database/models/Article")
 
 
-module.exports =(req,res)=>{
+module.exports = ( req, res ) => {
 
+    console.log(req.body)
     const { image } = req.files
 
     // console.log(image)

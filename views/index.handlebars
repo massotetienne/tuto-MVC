@@ -47,7 +47,7 @@
           <div class="card-content">
             <div class="content">
               <a href="/articles/{{_id}}"><h2>{{title}}</h2></a>
-              <p>{{content}}</p>
+              <p>{{ stripTags content }}</p>
               <p>Publié par {{author}}, le {{ moment createDate format ="DD-MM-YY"}}</p>
               <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
             </div>
