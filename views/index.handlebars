@@ -5,7 +5,7 @@
 <section class="section intro">
   <div class="container">
     <div class="columns">
-      
+
       <div class="column">
         <div class="content intro-text">
           <h1 class="title">Pour que le virtuel devienne réalité.</h1>
@@ -22,7 +22,7 @@
           </div>
         </div>
       </div>
-      
+
     </div>
   </div>
 </section>
@@ -35,7 +35,7 @@
   <div class="container">
     <div class="columns">
 
- {{#each post}}
+      {{#each (limit post 4)}}
 
       <div class="column">
         <div class="card">
@@ -46,16 +46,21 @@
           </div>
           <div class="card-content">
             <div class="content">
-              <a href="/articles/{{_id}}"><h2>{{title}}</h2></a>
+              <a href="/articles/{{_id}}">
+                <h2>{{title}}</h2>
+              </a>
               <p>{{ stripTags content }}</p>
               <p>Publié par {{author}}, le {{ moment createDate format ="DD-MM-YY"}}</p>
-              <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
+
             </div>
+            <button><a href="/articles/edit/{{ _id }}">edit</a></button>
+            
+
           </div>
         </div>
       </div>
 
- {{/each}}
+      {{/each}}
 
     </div>
   </div>

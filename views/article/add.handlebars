@@ -13,10 +13,16 @@
             <div class="field">
                 <label class="label">Contenu</label>
                 <div class="control">
-                    <textarea class="textarea" name="content"></textarea>
-                    <script>
-                        CKEDITOR.replace('content');
-                    </script>
+                    <textarea class="textarea" name="content" id="content"></textarea>
+                   <script>
+                    const ed = CKEDITOR.replace('content', {
+                        entities: false
+                    })
+
+                    ed.on('change', function (e) {
+                        console.log('Value: ', e.editor.getData())
+                    })
+                </script>
                 </div>
             </div>
 
