@@ -1,7 +1,9 @@
 const Article = require('../database/models/Article')
 const path = require('path')
+const fs = require('fs')
 
-module.exports = (req, res) => {
+
+module.exports = async (req, res) => {
 
     const b = req.body
     const q = req.params.id
@@ -12,19 +14,25 @@ module.exports = (req, res) => {
     console.log(f);
 
     if (f) {
-        const { image } = req.files
+        const {
+            image
+        } = req.files;
+        const uploadFile = path.resolve('./public/articles', image.name);
+        const article = await Article.findById(req.params.id);
 
-        // console.log(image)
+        fs.unlink('./public/' + article.image, (err) => {
+            if (err) console.log(err)
+            console.log('Mon Image est supprimer !')
+            image.mv(uploadFile, (error) => {
 
-        const uploadFile = path.resolve(__dirname, '..', 'public/articles', image.name)
+                Article.findByIdAndUpdate(q, {
+                    ...req.body,
+                    image: `/articles/${image.name}`
+                }, (error, post) => {
+                    if (err) console.log(err);
+                    res.redirect('/')
 
-        image.mv(uploadFile, (error) => {
-            Article.findByIdAndUpdate( q, {
-                ...req.body,
-                image: `/articles/${image.name}`
-            }, (error, post) => {
-                res.redirect('/')
-
+                })
             })
         })
     } else {
@@ -40,7 +48,4 @@ module.exports = (req, res) => {
             res.redirect('/articles/edit/' + q)
         })
     }
-
-
-
 }

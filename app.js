@@ -142,6 +142,6 @@ app.use((req, res) => {
 })
 
 // ==== Port ====
-app.listen(3000, () => {
+app.listen(process.env.PORT || 3000, () => {
     console.log("le serveur tourne sur le port 3000");
 })
